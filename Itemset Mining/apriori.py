@@ -36,7 +36,7 @@ def apriori(df, itemset, minsup, abs_sup=False):
                                          [support_list[i], level[i]])),
                                          ignore_index=True)
             else:
-                to_pop.appen(i)
+                to_pop.append(i)
         #pops in reverse order to avoid index issues
         to_pop.reverse()
         for i in to_pop:
