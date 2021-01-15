@@ -1,6 +1,16 @@
 import numpy as np
 import pandas as pd
 
+def eclat_mine(df, minsup):
+    frequent = {'support': [], 'itemset': []}
+    prefix = []
+    for col in df.columns:
+        t_col = set(df[df[col] == 1].index)
+        if len(t_col) >= minsup:
+            prefix.append((set(col), t_col))
+    eclat(prefix, minsup, frequent)
+    return pd.DataFrame(frequent)
+
 def eclat(prefix_class, minsup, frequent):
     '''
     Finds all itemsets with support greater or equal to `minsup`.
@@ -31,18 +41,17 @@ def eclat(prefix_class, minsup, frequent):
 
     for i in range(len(prefix_class)):
         first_item = prefix_class[i]
-        frequent.append(dict(zip(frequent.columns,
-                                 [len(first_item[1]), first_item[0]])),
-                                 ignore_index=True)
+        frequent['support'].append(len(first_item[1]))
+        frequent['itemset'].append(first_item[0])
         new_prefix_class = []
 
         for j in range(i+1, len(prefix_class)):
             second_item = prefix_class[j]
-            uni_item = first_item[0].union(second_item[0])
             t_union = first_item[1].intersection(second_item[1])
             sup_union = len(t_union)
 
             if sup_union >= minsup:
+                uni_item = first_item[0].union(second_item[0])
                 new_prefix_class.append((uni_item, t_union))
         if new_prefix_class:
             eclat(new_prefix_class, minsup, frequent)
