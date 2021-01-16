@@ -7,7 +7,7 @@ def is_linear(node):
     Returns wheter the passed tree is linear.
     If so, returns a list of `_FP_Node` objects.
     '''
-    branch = [node]
+    branch = []
     while True:
         if not node.childrem:
             return branch
@@ -30,12 +30,15 @@ def _get_paths(node):
            parent_node = parent_node.parent
         path = node.count, path
         paths.append(path)
-        node = node.node_link
+        if not node is node.node_link:
+            node = node.node_link
+        else:
+            node = None
     return paths
 
 def get_combinations(iterable):
     return chain.from_iterable(_combinations(iterable, r)
-                        for r in range(len(iterable) + 1))
+                        for r in range(1, len(iterable) + 1))
 
 def _combinations(iterable, r):
     '''
@@ -50,7 +53,7 @@ def _combinations(iterable, r):
     r_el = []
     sup = float('inf')
     for i in indices:
-        r_el.append(iterable[i])
+        r_el.append(iterable[i].name)
         if iterable[i].count < sup:
             sup = iterable[i].count
     yield sup, r_el
@@ -66,7 +69,7 @@ def _combinations(iterable, r):
         r_el = []
         sup = float('inf')
         for i in indices:
-            r_el.append(iterable[i])
+            r_el.append(iterable[i].name)
             if iterable[i].count < sup:
                 sup = iterable[i].count
         yield sup, r_el
@@ -122,7 +125,6 @@ def generate_FP_tree(df, minsup): #O(|D| * |I|)
         The root is the null item.
     '''
     ord_items = df.sum(skipna=True) #O(|D|*|I|)
-    print(ord_items)
     ord_items = ord_items[ord_items >= minsup] #O(|I|)
     ord_items.sort_values(ascending=False, inplace=True) #O(|I| * lg |I|)
 
