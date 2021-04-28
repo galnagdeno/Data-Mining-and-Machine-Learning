@@ -8,7 +8,8 @@ def k_means(data, k):
     centroids = pd.DataFrame(generate_random_centroids(data, k))
     
     #for each point, indicates which centroid it is associated with and their distance
-    group = pd.DataFrame({'distance': np.full(data.shape[0], float('inf')), 'centroid': np.arange(data.shape[0])})
+    group = pd.DataFrame({'distance': np.full(data.shape[0], float('inf')),
+                          'centroid': np.arange(data.shape[0])})
     error = group['distance'].sum()
     prev_error = 0
     
@@ -19,9 +20,14 @@ def k_means(data, k):
         for i in range(centroids.shape[0]):
             centroid = centroids.loc[i]
             distances = ((data - centroid) ** 2).sum(axis=1) #finds distances from points to centroid
-            closer_points = group['distance'] > distances
-            group.loc[closer_points, 'centroid'] = i
-            group.loc[closer_points, 'distance'] = distances[closer_points]
+            #if else to replace all distances at every iteration of while
+            if i == 0:
+                group['centroid'] = i
+                group['distance'] = distances
+            else:
+                closer_points = group['distance'] > distances
+                group.loc[closer_points, 'centroid'] = i
+                group.loc[closer_points, 'distance'] = distances[closer_points]
                 
         #computes new centroids
         for i in range(k):
