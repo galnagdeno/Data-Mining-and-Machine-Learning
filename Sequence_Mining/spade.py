@@ -47,7 +47,7 @@ def mine_spade(level, minsup, frequent):
         frequent[leaf.sequence] = leaf.support
         new_level = []
         for sibling in level:
-            new_seq = Poslist(oleaf, leaf)
+            new_seq = Poslist(sibling, leaf)
             if new_seq.support >= minsup:
                 new_level.append(new_seq)
         if new_level:

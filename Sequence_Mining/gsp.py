@@ -58,7 +58,7 @@ def gsp(dataset, alphabet, minsup):
     level = root.childrem
 
     while level: #O(|L|) -- L = largest element in dataset
-        print('old:', [item.sequence for item in level])
+        #print('old:', [item.sequence for item in level])
         new_level = []
         sup_list = compute_support(level, dataset) #O(|level|*|dataset|*|L|)
 
@@ -67,7 +67,7 @@ def gsp(dataset, alphabet, minsup):
                 level[i].support = sup_list[i]
                 frequent[level[i].sequence] = sup_list[i]
                 new_level.append(level[i])
-        print('new:', [item.sequence for item in new_level])
+        #print('new:', [item.sequence for item in new_level])
         level = extend_prefix_tree(new_level, frequent)
     return frequent
 
@@ -110,7 +110,7 @@ def extend_prefix_tree(level, frequent): #O(|level|^2 * |leaf|)
     new_level = []
     for leaf in level: #O(|level|)
         for sibling in leaf.parent.childrem: #O(|level|)
-            if sibling.support:
+            if sibling.support > 0:
                 new_seq = leaf.sequence + sibling.sequence[-1]
                 for subseq in combinations(new_seq, len(new_seq) - 1): #O(|leaf|)
                     if not subseq[0] in frequent: #O(1)
