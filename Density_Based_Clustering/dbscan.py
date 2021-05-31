@@ -20,7 +20,7 @@ def dbscan(df, rad, minpts):
 
     Returns
     -------
-    A pd.Series im which each index is the respective data point and
+    A pd.Series in which each index is the respective data point and
     each respective value is a integer that represents a cluster.
     '''
     #checks which points are core points and computes neighbors
