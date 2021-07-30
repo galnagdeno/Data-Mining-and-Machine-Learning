@@ -8,3 +8,4 @@ def gaussian_kmeans(df, var, num_clusters):
     kernel_matrix = pd.DataFrame(kernel_matrix, columns = range(df.shape[0]))
     return kernel_kmeans(kernel_matrix, num_clusters)
     
+
