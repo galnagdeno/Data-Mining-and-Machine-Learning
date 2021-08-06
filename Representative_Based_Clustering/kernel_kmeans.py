@@ -29,13 +29,12 @@ def kernel_kmeans(kernel_matrix, k):
     while too_big:
         for i in range(k):
             cluster = clustering[i]
-            cluster_size = len(cluster) 
-
+            cluster_size = cluster.shape[0]
             #computes squared norm of cluster means
-            clusters_sqnorms[i] = kernel_matrix[cluster].loc[cluster].values.sum() / cluster_size ** 2)
+            clusters_sqnorms[i] = kernel_matrix.loc[cluster, cluster].sum().sum() / cluster_size ** 2
             
             #average kernel value for each point and each cluster
-            average_kvalue[i] = kernel_matrix[cluster].sum(axis=1) / cluster_size
+            average_kvalue[:, i] = kernel_matrix[cluster].values.sum(axis=1) / cluster_size
 
             #computes the distance from each point to each cluster
             distances[i] = average_kvalue[i] - clusters_sqnorms[i]
@@ -52,6 +51,8 @@ def kernel_kmeans(kernel_matrix, k):
         error = distances.sum()
         prev_error = error
         too_big = error < prev_error
+
+    return new_clusters, error
 
 
 def get_random_cluster(matrix, k):
